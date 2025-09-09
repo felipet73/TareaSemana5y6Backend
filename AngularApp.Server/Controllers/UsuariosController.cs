@@ -86,11 +86,22 @@ namespace AngularApp.Server.Controllers
         }*/
 
         [HttpPost(Name ="login")]        
-        public async Task<ActionResult<UsuariosModel>> login(string email, string pwd)
+        public async Task<ActionResult<UsuariosModel>> login(UsuariosModel usuariosModel)
         {
             
-            var uid = await _context.UsuariosModel.Where(u => u.correo == email && u.pwd == pwd).FirstOrDefaultAsync();
-            
+            var uid = await _context.UsuariosModel.Where(u => u.correo == usuariosModel.correo && u.pwd == usuariosModel.pwd).FirstOrDefaultAsync();
+            if (uid == null)
+            {
+                /*insertar
+                UsuariosModel newUser = new UsuariosModel();
+                newUser.correo = usuariosModel.correo;
+                newUser.nombre = usuariosModel.correo.Split('@')[0] ?? "";
+                newUser.pwd = usuariosModel.pwd;
+                _context.UsuariosModel.Add(newUser);
+                _context.SaveChanges();
+                return Ok(newUser);*/
+                return NotFound("Usuario no existe");
+            }
             return Ok(uid);
         }
 
